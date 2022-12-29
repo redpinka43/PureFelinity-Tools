@@ -1,0 +1,18 @@
+ For the future, if you want to install a module for your version of Python (3.11), use:
+	py -3.11 -m pip install [module_name]
+
+To run the script, run 
+	py match_cats.py
+
+
+-----
+
+Next features:
+- Have a 'from cache' option in the fetching.
+x - Add albino filtering
+- Create a 'findADate' program that gives the best matches for a particular cat.
+x - Add the ability to add a user's (or multiple user's) cats in the search list, in addition 
+	x - you can also designate to use only those user's cats, instead of doing the search
+- Why is maxSalePrice not working?
+
+it never scores the dating matches. shit.
