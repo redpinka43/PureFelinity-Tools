@@ -11,17 +11,19 @@ class CatCoatData:
         self.albino = None
         self.ghostmarking = False
         self.rufused = False
-        self.golden = None
-        self.silver = None
-        self.smoke = None
+        self.golden = False
+        self.silver = False
+        self.smoke = False
 
     def __str__(self):
         return stringifyAttributes(self)
 
 
 def areAttributesEqual(first, second):
-    if first and second and first != second:
-        return False
+    # second is filters
+    if second:
+        if first != second:
+            return False
     return True
 
 

@@ -2,6 +2,7 @@ import datetime
 import re
 import sys
 from bs4 import BeautifulSoup
+from define_filters import NUMBER_OF_DAYS_IN_WHICH_WE_WILL_BE_BREEDING
 from src.cat_coat_data import CatCoatData, catCoatDatasMatchColor, catCoatDatasMatchTextureAndLength
 from src.match_cats_filters import MatchCatsFilters
 from src.util import getElementTextByPartialText, stringifyAttributes
@@ -9,7 +10,9 @@ from src.enums import *
 
 
 CACHE_EXPIRES_WHEN_THIS_OLD_IN_DAYS = 2
-NUMBER_OF_DAYS_FEMALE_CAN_BREED_AFTER = 10
+NUMBER_OF_DAYS_FEMALE_CAN_BREED_AFTER = 13 - \
+    NUMBER_OF_DAYS_IN_WHICH_WE_WILL_BE_BREEDING
+
 AGE_WHEN_CATS_START_BREEDING = 10
 AGE_WHEN_FEMALE_CANT_BREED_ANYMORE = 80
 RESCUE_SHELTER_ADOPTION_PRICE = 200
@@ -103,7 +106,7 @@ class CatData:
     def getAge(self):
         return (datetime.date.today() - self.birthDate).days
 
-    csvHeader = 'id cacheDate name owner salePrice studFee age gender breed imperfectTraitsScore totalTraitDeviancy scoreBodyType scoreBodySize scoreHeadShape scoreEars scoreNoseLength scoreEyeShape scoreEyeColor scoreCoat scoreColor scoreTail scoreLegs bodyType bodySize headShape earSize earCurl noseLength eyeShape eyeColor eyeDepth tail legs coatLength coatTexture coatBaseColor coatBicolor coatTabbyPattern coatAlbino coatGhostMarking coatRufused coatGolden coatSilver coatSmoke showPoints ageOfMostRecentOffspring ableToGetPregnant fullness health coatCondition activeness attitude mood'
+    csvHeader = 'id imperfectTraitsScore totalTraitDeviancy cacheDate name owner salePrice studFee age gender breed scoreBodyType scoreBodySize scoreHeadShape scoreEars scoreNoseLength scoreEyeShape scoreEyeColor scoreCoat scoreColor scoreTail scoreLegs bodyType bodySize headShape earSize earCurl noseLength eyeShape eyeColor eyeDepth tail legs coatLength coatTexture coatBaseColor coatBicolor coatTabbyPattern coatAlbino coatGhostMarking coatRufused coatGolden coatSilver coatSmoke showPoints ageOfMostRecentOffspring ableToGetPregnant fullness health coatCondition activeness attitude mood'
 
     def getCsvHeader():
         return CatData.csvHeader.split(' ')
@@ -111,6 +114,8 @@ class CatData:
     def convertToCsvRow(self):
         cells = []
         cells.append(self.id)
+        cells.append(self.score.getImperfectTraitsScore())
+        cells.append(self.score.getTotalTraitDeviancy())
         cells.append(self.cacheDate)
         cells.append(self.name)
         cells.append(self.owner)
@@ -119,8 +124,6 @@ class CatData:
         cells.append(self.getAge())
         cells.append(self.gender.value)
         cells.append(self.breed)
-        cells.append(self.score.getImperfectTraitsScore())
-        cells.append(self.score.getTotalTraitDeviancy())
         cells.append(self.score.bodyType)
         cells.append(self.score.bodySize)
         cells.append(self.score.headShape)
@@ -337,10 +340,11 @@ class CatData:
     def fillInBreedingInfoWithHtml(self, html):
         soup = BeautifulSoup(html, 'html.parser')
 
+        self.ableToGetPregnant = self.getAge() >= AGE_WHEN_CATS_START_BREEDING
+
         noOffspringText = getElementTextByPartialText(
             soup, 'i', 'has no offspring.')
         if noOffspringText:
-            # self.ableToGetPregnant = self.getAge() >= AGE_WHEN_CATS_START_BREEDING
             return
 
         offspringRows = soup.find_all('tr', {'bgcolor': '#F1EADE'})
@@ -374,12 +378,21 @@ class CatData:
             filters.noseLength if filters.noseLength else 0
         self.score.eyeShape = self.eyeShape - filters.eyeShape if filters.eyeShape else 0
 
-        self.score.eyeColor = 0 if (self.eyeColor == filters.eyeColor) else 2
+        if filters.eyeColor:
+            self.score.eyeColor = 0 if (
+                self.eyeColor == filters.eyeColor) else 2
+        else:
+            self.score.eyeColor = 0
         if self.eyeDepth != 'deep':
             self.score.eyeColor += 1
 
-        self.score.tail = 0 if self.tail == filters.tail else 1
-        self.score.legs = 0 if self.legs == filters.legs else 1
+        self.score.tail = 0
+        if filters.tail and self.tail != filters.tail:
+            self.score.tail = 1
+
+        self.score.legs = 0
+        if filters.legs and self.legs != filters.legs:
+            self.score.legs = 1
 
         self.score.coat = 0 if catCoatDatasMatchTextureAndLength(
             self.coat, filters.coat) else 2

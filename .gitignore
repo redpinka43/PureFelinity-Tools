@@ -50,3 +50,6 @@ Thumbs.db
 
 # VSCode
 .vscode/
+O_breedMatches/
+O_dates/
+cache/cat_data_cache.txt

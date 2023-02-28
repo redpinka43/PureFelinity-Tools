@@ -11,6 +11,14 @@ from src.util import USE_MOCK_DATA, sleepForABit, tryUntilSucceed
 RESULTS_PER_PAGE = 20
 
 
+def getSimplifiedGender(gender: Gender) -> str:
+    if gender is Gender.EITHER:
+        return Gender.EITHER
+    if gender is Gender.FEMALE or gender is Gender.FEMALE_NEUTERED or gender is Gender.FEMALE_PREGNANT:
+        return Gender.FEMALE
+    return Gender.MALE
+
+
 def getSearchPageRequestUrl(filters: MatchCatsFilters, page=0):
     # later we could perhaps use the 'search by trait' feature
     url = CAT_SEARCH_REQUEST_URL
@@ -19,7 +27,9 @@ def getSearchPageRequestUrl(filters: MatchCatsFilters, page=0):
         url += f'start={page * RESULTS_PER_PAGE}&'
 
     url += 'breed=any'
-    url += f'&gender={filters.gender.value}'
+
+    simplifiedGender = getSimplifiedGender(filters.gender)
+    url += f'&gender={simplifiedGender.value}'
 
     if filters.maxAge:
         url += f'&maxage={filters.maxAge}'

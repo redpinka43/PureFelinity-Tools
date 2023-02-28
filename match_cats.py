@@ -1,11 +1,11 @@
 import csv
+from define_filters import defineFilters
 from src.breed_choices import BreedChoices
 from src.cat_cache import *
 from src.fetch_cats import *
 from src.match_cats_filters import *
 from src.question_choices import *
 from src.sort_cats import sortCats
-from src.users import Users
 
 
 def askForBreedName() -> MatchCatsFilters:
@@ -49,22 +49,10 @@ def matchCatsAndOutputToFile(filters: MatchCatsFilters):
 
 print('Matching cats...\n')
 
-filters = BreedChoices.palePanther()
-filters.minAge = 6
-filters.maxAge = 70  # 70
-filters.maxSalePrice = 600
+filters = defineFilters()
 filters.saleOrStud = SaleOrStud.SALE
 filters.gender = Gender.FEMALE
 
-# filters.useOnlyOwnerIds = True
-filters.fromCacheOnly = True
-filters.additionalOwnerIds = [
-    Users.KITTYSTIX1,
-    Users.KITTYSTIX2,
-    Users.FUGUHUTCH,
-    Users.DRAWINGBLONDE,
-    Users.BUMBLEGUN
-]
 
 # print(f'filters = {filters}')
 

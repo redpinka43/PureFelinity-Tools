@@ -24,6 +24,7 @@ class CatSearchResultData:
         self.age = None
         self.salePrice = None
         self.studFee = None
+        self.mood = None
 
     def __str__(self):
         return stringifyAttributes(self)
@@ -72,6 +73,11 @@ class CatSearchResultData:
             return False
         if filters.minAge and self.age < filters.minAge:
             return False
+
+        # mood
+        if self.mood:
+            if filters.maxMoodDeviation and abs(float(self.mood) - 50) > filters.maxMoodDeviation:
+                return False
 
         # no bid
         if self.salePrice == BID_SALE_PRICE:

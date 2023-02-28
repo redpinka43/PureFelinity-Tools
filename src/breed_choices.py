@@ -54,6 +54,58 @@ class BreedChoices:
         filters.coat.length = 'shorthair'
         return filters
 
+    def himalayanBearCat():
+        filters = MatchCatsFilters()
+        filters.filterName = 'HimalayanBearCat'
+        filters.bodyType = 9
+        filters.bodySize = 20
+        filters.headShape = 7
+        filters.earSize = 4
+        filters.earCurl = 'straight'
+        filters.noseLength = 8
+        filters.eyeShape = 5
+        filters.tail = 'normal'
+        filters.legs = 'normal'
+        filters.coat = CatCoatData()
+        filters.coat.length = 'longhair'
+        filters.coat.albino = 'point'
+        return filters
+
+    def lynahnx():
+        filters = MatchCatsFilters()
+        filters.filterName = 'Lynahnx'
+        filters.bodyType = 14
+        filters.bodySize = 20
+        filters.headShape = 7
+        filters.earSize = 14
+        filters.earCurl = 'straight'
+        filters.noseLength = 18
+        filters.eyeShape = 9
+        filters.eyeColor = 'green'
+        filters.tail = 'normal'
+        filters.legs = 'normal'
+        filters.coat = CatCoatData()
+        filters.coat.length = 'shorthair'
+        filters.coat.texture = 'satin'
+        filters.coat.tabbyPattern = 'tabby'
+        return filters
+
+    def miniatureLeopard():
+        filters = MatchCatsFilters()
+        filters.filterName = 'MiniatureLeopard'
+        filters.bodyType = 4
+        filters.bodySize = 17
+        filters.headShape = 1
+        filters.earSize = 16
+        filters.earCurl = 'straight'
+        filters.noseLength = 10
+        filters.eyeShape = 5
+        filters.tail = 'normal'
+        filters.legs = 'normal'
+        filters.coat = CatCoatData()
+        filters.coat.tabbyPattern = 'spotted tabby'
+        return filters
+
     def orientalStageDragon():
         filters = MatchCatsFilters()
         filters.filterName = 'OrientalStageDragon'
@@ -101,4 +153,23 @@ class BreedChoices:
         filters.coat.length = 'shorthair'
         filters.coat.texture = 'satin'
         filters.coat.smoke = True
+        return filters
+
+    def snowshoe():
+        filters = MatchCatsFilters()
+        filters.filterName = 'Snowshoe'
+        filters.bodyType = 14
+        filters.bodySize = 14
+        filters.headShape = 16
+        filters.earSize = 15
+        filters.earCurl = 'straight'
+        filters.noseLength = 15
+        filters.eyeShape = 16
+        filters.tail = 'normal'
+        filters.legs = 'normal'
+        filters.coat = CatCoatData()
+        filters.coat.length = 'shorthair'
+        filters.coat.bicolor = 'mitted'
+        filters.coat.albino = 'point'
+        filters.coat.silver = False
         return filters

@@ -151,6 +151,10 @@ def getCatDataList(catIdsList: list[str], session, filters: MatchCatsFilters) ->
                 f'rejecting cat with id {catData.id} because its age {catAge} is less than the minAge {filters.minAge}')
             return False
 
+        # mood
+        if filters.maxMoodDeviation and abs(float(catData.mood) - 50) > filters.maxMoodDeviation:
+            return False
+
         # price
         exceedsSalePrice = (catData.salePrice > 0) and filters.maxSalePrice and (
             filters.maxSalePrice < catData.salePrice)
@@ -178,7 +182,7 @@ def getCatDataList(catIdsList: list[str], session, filters: MatchCatsFilters) ->
                     return False
         return True
 
-    catDataList = list(catDataDict.values())
+    # catDataList = list(catDataDict.values())
     catDataList = list(filter(filterCatList, list(catDataDict.values())))
 
     print(f'catDataList length = {len(catDataList)}')
@@ -187,11 +191,11 @@ def getCatDataList(catIdsList: list[str], session, filters: MatchCatsFilters) ->
 
 def fetchCats(filters: MatchCatsFilters):
     with requests.Session() as session:
-        if not USE_MOCK_DATA:
-            login(session)
 
         catIdsToFetch: list[str] = []
         if not filters.fromCacheOnly:
+            if not USE_MOCK_DATA:
+                login(session)
             catIdsToFetch = getCatIdsToFetch(filters, session)
 
         # print()

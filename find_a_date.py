@@ -1,4 +1,5 @@
 import csv
+from define_filters import DATE_CAT_IDS, defineFilters
 from src.breed_choices import BreedChoices
 from src.cat_cache import *
 from src.fetch_cats import *
@@ -44,10 +45,10 @@ def getPotentialOffspring(cat: CatData, allCats: list[CatData]):
     return allCats
 
 
-def findADateForKittums(filters: MatchCatsFilters, cat: CatData):
+def findADateForKittums(filters: MatchCatsFilters, cat: CatData, outputDirectory: str, filePath: str):
     try:
-        createDirectory(OUTPUT_DIRECTORY)
-        with open(FILE_PATH, 'w', encoding='UTF8', newline='') as f:
+        createDirectory(outputDirectory)
+        with open(filePath, 'w', encoding='UTF8', newline='') as f:
             addFiltersBasedOnCat(filters, cat)
             allCats = fetchCats(filters)
             potentialOffspring = getPotentialOffspring(cat, allCats)
@@ -62,43 +63,31 @@ def findADateForKittums(filters: MatchCatsFilters, cat: CatData):
         print(f'allCats length = {len(allCats)}')
     except PermissionError as e:
         print(
-            f'\nError: Please close {FILE_PATH} before running this program.')
+            f'\nError: Please close {filePath} before running this program.')
         return False
     return True
 
 # ------------------------------------------------------------------------
 
 
-# Describe the ideal offspring
-CAT_ID = '2013205'
-filters = BreedChoices.palePanther()
+def main(catId: str):
+    filters = defineFilters()
+    # print(f'filters = {filters}')
 
-# Filters for the cat matches
-filters.minAge = 6
-filters.maxAge = 70  # 80 is max breedable age
-filters.maxSalePrice = 600
+    cat = getCatData(catId)
+    print(f'Finding a date for cat {cat.name} (#{catId})...\n')
 
-# filters.useOnlyOwnerIds = True
-filters.fromCacheOnly = True
-filters.additionalOwnerIds = [
-    Users.KITTYSTIX1,
-    Users.KITTYSTIX2,
-    Users.FUGUHUTCH,
-    Users.DRAWINGBLONDE,
-    Users.BUMBLEGUN
-]
+    filteredCatName = cat.name.translate({ord(c): None for c in '!<>@#$|#/*§'})
+    OUTPUT_FILE_NAME = f'{filters.filterName}_matches_for_(#{cat.id})_{filteredCatName}.csv'
+    OUTPUT_DIRECTORY = 'O_dates'
+    FILE_PATH = f'{OUTPUT_DIRECTORY}/{OUTPUT_FILE_NAME}'
 
-# print(f'filters = {filters}')
-
-cat = getCatData(CAT_ID)
-print(f'Finding a date for cat {cat.name} (#{CAT_ID})...\n')
+    success = findADateForKittums(
+        filters, cat, outputDirectory=OUTPUT_DIRECTORY, filePath=FILE_PATH)
+    if success:
+        print(f'\nFinished successfully.')
 
 
-filteredCatName = cat.name.translate({ord(c): None for c in '!@#$|'})
-OUTPUT_FILE_NAME = f'{filters.filterName}_matches_for_(#{cat.id})_{filteredCatName}.csv'
-OUTPUT_DIRECTORY = 'O_dates'
-FILE_PATH = f'{OUTPUT_DIRECTORY}/{OUTPUT_FILE_NAME}'
-
-success = findADateForKittums(filters, cat)
-if success:
-    print(f'\nFinished successfully.')
+for id in DATE_CAT_IDS:
+    print(f'main(id) = {id}')
+    main(id)

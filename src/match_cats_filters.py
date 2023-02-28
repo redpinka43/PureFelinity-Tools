@@ -14,6 +14,7 @@ class MatchCatsFilters:
         self.maxAge = None
         self.maxSalePrice = None
         self.maxStudFee = None
+        self.maxMoodDeviation = None
 
         self.bodyType = None
         self.bodySize = None
