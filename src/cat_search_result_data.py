@@ -20,6 +20,12 @@ def getGenderFromString(string):
 class CatSearchResultData:
     def __init__(self):
         self.id = None
+        self.name = None
+
+        self.fullness = None
+        self.health = None
+        self.condition = None
+
         self.gender = Gender.EITHER
         self.age = None
         self.salePrice = None

@@ -45,6 +45,15 @@ def tryUntilSucceed(function, functionName: str, onErrorMessage: str):
             retryCounter += 1
 
 
+def getElementsByPartialText(soup: BeautifulSoup, tagType: str, text: str) -> list[ResultSet]:
+    elements: list[ResultSet] = []
+    for item in soup.find_all(tagType):
+        if not text in item.text:
+            continue
+        elements.append(item)
+    return elements
+
+
 def getElementByPartialText(soup: BeautifulSoup, tagType: str, text: str) -> ResultSet:
     for item in soup.find_all(tagType):
         if not text in item.text:
@@ -67,3 +76,15 @@ def goUpParentNTimes(element: ResultSet, times=1) -> ResultSet:
         newElement = newElement.parent
         times -= 1
     return newElement
+
+
+def getKeyByValue(dict, val):
+    for key, value in dict.items():
+        if val == value:
+            return key
+
+    return "Key doesn't exist"
+
+
+def getEndingS(number):
+    return 's' if number != 1 else ''

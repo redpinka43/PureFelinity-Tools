@@ -1,4 +1,4 @@
-from bs4 import element, BeautifulSoup, ResultSet
+from bs4 import BeautifulSoup, ResultSet
 from src.cat_search_result_data import *
 from src.fetch_cats_payload_data import REQUEST_HEADERS, USER_CATS_PAGE_URL
 from src.match_cats_filters import MatchCatsFilters
@@ -35,6 +35,9 @@ def convertRowToCatSearchResultData(row: ResultSet):
     # id
     catHref = cells[0].find_all('a', href=True)[0].get("href")
     data.id = catHref.split('=')[-1]
+
+    # name
+    data.name = cells[0].text.split('stud ')[-1].strip()
 
     # gender
     data.gender = getGenderFromString(cells[2].text.strip())
