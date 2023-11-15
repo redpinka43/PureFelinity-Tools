@@ -36,6 +36,7 @@ def buyMoreFood(session):
 
         # If not enough money
         money = int(text.split('Money: $')[-1].split('\n')[0])
+        print(f'money = {money}')
         if MINIMUM_MONEY_IN_ACCOUNT > money:
             raise NotEnoughMoneyException
         if money < AMOUNT_OF_FOOD_TO_BUY / 2:

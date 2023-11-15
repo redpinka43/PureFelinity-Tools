@@ -67,6 +67,9 @@ def getMoneyAvailable(session):
 
 
 def buyItems(session, item: Item):
+    if item.price == 0:
+        return 0
+
     # After buying each one, keep checking the shopping page if the item is still available, as well as your current money
     moneyAvailable = getMoneyAvailable(session)
     itemsBought = 0
@@ -123,7 +126,7 @@ def buyMoreGroomingItems(session):
     items['doubleSidedBrush'] = getItem("Double-Sided Brush")
     items['groomingGlove'] = getItem("Grooming Glove")
 
-    if items['groomingGlove'].inStock == 0 and items['groomingGlove'].inStock == 0:
+    if items['groomingGlove'].inStock == 0 and items['doubleSidedBrush'].inStock == 0:
         raise NotEnoughGroomingItemsToBuy
 
     moneyAvailable = getMoneyAvailable(session)

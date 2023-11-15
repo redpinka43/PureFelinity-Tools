@@ -8,7 +8,7 @@ from src.groom_cats.website_data import *
 from src.util import getKeyByValue
 
 
-USER_ID = LocationsClass.a5_Orlando()
+USER_ID = LocationsClass.a2_Kittystix2()
 
 
 def getUsername() -> str:
